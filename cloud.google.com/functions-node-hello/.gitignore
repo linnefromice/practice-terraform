@@ -36,4 +36,6 @@ override.tf.json
 terraform.rc
 
 /tmp
+/functions/*
+!/functions/*.zip
 .DS_Store
