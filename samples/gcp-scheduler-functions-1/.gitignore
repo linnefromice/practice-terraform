@@ -169,4 +169,8 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-
+# Customize
+.DS_Store
+/tmp
+/libs/__artifacts
+!/libs/__artifacts/.gitkeep
