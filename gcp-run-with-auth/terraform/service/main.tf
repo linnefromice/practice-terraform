@@ -51,3 +51,15 @@ data "google_firebase_web_app_config" "default" {
   web_app_id = google_firebase_web_app.default.app_id
   project    = var.project
 }
+
+output "firebase_api_key" {
+  value = data.google_firebase_web_app_config.default.api_key
+}
+
+output "firebase_auth_domain" {
+  value = data.google_firebase_web_app_config.default.auth_domain
+}
+
+output "firebase_app_id" {
+  value = google_firebase_web_app.default.app_id
+}
