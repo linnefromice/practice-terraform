@@ -10,3 +10,23 @@ export class AppController {
     return this.appService.getHello();
   }
 }
+
+@Controller('app/js')
+export class JavaScriptController {
+  constructor(private readonly appService: AppService) {}
+
+  @Get()
+  getHelloJs(): string {
+    return this.appService.getHelloJs();
+  }
+}
+
+@Controller('app/ts')
+export class TypeScriptController {
+  constructor(private readonly appService: AppService) {}
+
+  @Get()
+  getHelloTs(): string {
+    return this.appService.getHelloTs();
+  }
+}
