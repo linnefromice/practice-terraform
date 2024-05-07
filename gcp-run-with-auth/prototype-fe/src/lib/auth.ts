@@ -21,11 +21,9 @@ export const login = async () => {
     const credential = GoogleAuthProvider.credentialFromResult(result);
     if (credential === null) return;
     const token = credential.accessToken;
-    const user = result.user;
     return {
-      uid: user.uid,
-      name: user.displayName,
-      accessToken: token
+      user: result.user,
+      token: token
     }
   }).catch((error) => {
     console.error(error);
