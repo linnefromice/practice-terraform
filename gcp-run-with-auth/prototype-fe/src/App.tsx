@@ -1,58 +1,49 @@
-import { useState } from "react";
-import { login as loginFb, logout as logoutFb } from "./lib/auth"
 import axios from "axios";
 import { BE_URL } from "./config/backend";
-import { User } from "firebase/auth";
+import { useAuth, useAuthenticatedUser } from "./hooks/useAuth";
 
-const axiosInstance = axios.create({
-  baseURL: BE_URL
-})
+const generateAxiosInstance = (idToken?: string) => {
+  const headers = idToken ? { Authorization: `Bearer ${idToken}` } : {};
+  return axios.create({
+    baseURL: BE_URL,
+    headers,
+  })
+}
 
 const App = () => {
-  const [user, setUser] = useState<User>();
-  const [idToken, setIdToken] = useState<string>();
+  const { signIn, signOut } = useAuth();
+  const { data: authenticated, isLoading: isLoadingAuthenticated } = useAuthenticatedUser();
 
-  const login = async () => {
-    const res = await loginFb();
-    if (res && res.user) {
-      setUser(res.user);
-      setIdToken(await res.user.getIdToken());
-    }
-  }
-
-  const logout = async () => {
-    await logoutFb();
-    setUser(undefined);
-  }
-
-  const callGET = async (path: string) => {
-    const res = await axiosInstance.get(path).catch(console.error);
+  const callGET = async (input: { path: string, idToken?: string }) => {
+    const { path , idToken } = input;
+    const res = await generateAxiosInstance(idToken).get(path).catch(console.error);
     if (res) {
       console.log(res.data);
     }
   }
 
-  const callPOST = async (path: string, idToken: string) => {
-    const res = await axiosInstance.post(path, {
-      idToken: idToken
-    }).catch(console.error);
+  const callPOST = async (input: { path: string, idToken?: string, data?: any }) => {
+    const { path , idToken, data } = input;
+    const res = await generateAxiosInstance(idToken).post(path, data).catch(console.error);
 
     if (res) {
       console.log(res.data);
     }
   }
+
+  if (isLoadingAuthenticated) return <div>Loading...</div>
 
   return (
     <div>
       <h1>Firebase Authentication</h1>
-      {user && <p>Welcome, {user.displayName ?? "Anonymous"}</p>}
-      <button onClick={login}>LOGIN</button>
-      {user && <button onClick={logout}>LOGOUT</button>}
-      <button onClick={() => callGET("/")}>Call /</button>
-      <button onClick={() => callGET("/app/js")}>Call /app/js</button>
-      <button onClick={() => callGET("/app/ts")}>Call /app/ts</button>
-      <button onClick={() => callPOST("/auth", idToken as string)}>Call /auth</button>
-      <button onClick={() => callGET("/no-auth")}>Call /no-auth</button>
+      {authenticated && <p>Welcome, {authenticated.user.displayName ?? "Anonymous"}</p>}
+      <button onClick={signIn}>LOGIN</button>
+      {authenticated && <button onClick={signOut}>LOGOUT</button>}
+      <button onClick={() => callGET({ path: "/", idToken: authenticated?.idToken })}>Call /</button>
+      <button onClick={() => callGET({ path: "/app/js", idToken: authenticated?.idToken })}>Call /app/js</button>
+      <button onClick={() => callGET({ path: "/app/ts", idToken: authenticated?.idToken })}>Call /app/ts</button>
+      <button onClick={() => callGET({ path: "/auth", idToken: authenticated?.idToken })}>Call /auth</button>
+      <button onClick={() => callGET({ path: "/no-auth", idToken: authenticated?.idToken })}>Call /no-auth</button>
     </div>
   )
 }
