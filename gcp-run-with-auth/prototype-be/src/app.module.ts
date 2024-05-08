@@ -5,17 +5,11 @@ import {
   TypeScriptController,
 } from './app.controller';
 import { AppService } from './app.service';
-import { AuthController, NoAuthController } from './auth.controller';
+import { AuthModule } from './auth.module';
 
 @Module({
-  imports: [],
-  controllers: [
-    AppController,
-    JavaScriptController,
-    TypeScriptController,
-    AuthController,
-    NoAuthController,
-  ],
+  imports: [AuthModule],
+  controllers: [AppController, JavaScriptController, TypeScriptController],
   providers: [AppService],
 })
 export class AppModule {}
