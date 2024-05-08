@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import * as admin from 'firebase-admin';
 
@@ -23,10 +23,8 @@ export class NoAuthController {
 export class AuthController {
   constructor(private readonly appService: AppService) {}
 
-  @Post()
-  async listUsers(@Body() param: { idToken: string }): Promise<string[]> {
-    const decodedToken = await admin.auth().verifyIdToken(param.idToken);
-    console.dir(decodedToken);
+  @Get()
+  async listUsers(): Promise<string[]> {
     return users();
   }
 }
