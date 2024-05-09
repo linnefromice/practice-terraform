@@ -1,7 +1,7 @@
 import { Controller, Get, Req } from '@nestjs/common';
 import * as admin from 'firebase-admin';
-import { RequestWithAuthenticated } from './auth.middleware';
 import { UserRecord } from 'firebase-admin/lib/auth/user-record';
+import { RequestWithAuthenticated } from './auth.middleware';
 
 const user = async (uid: string) => {
   const auth = admin.app().auth();

@@ -1,12 +1,15 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
+import { prisma } from './lib/db';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getHello(): string {
+  async getHello(): Promise<string> {
+    const count = await prisma.user.count();
+    console.log(count);
     return this.appService.getHello();
   }
 }
