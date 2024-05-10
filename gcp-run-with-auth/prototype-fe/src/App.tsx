@@ -22,14 +22,14 @@ const App = () => {
     }
   }
 
-  const callPOST = async (input: { path: string, idToken?: string, data?: any }) => {
-    const { path , idToken, data } = input;
-    const res = await generateAxiosInstance(idToken).post(path, data).catch(console.error);
+  // const callPOST = async (input: { path: string, idToken?: string, data?: any }) => {
+  //   const { path , idToken, data } = input;
+  //   const res = await generateAxiosInstance(idToken).post(path, data).catch(console.error);
 
-    if (res) {
-      console.log(res.data);
-    }
-  }
+  //   if (res) {
+  //     console.log(res.data);
+  //   }
+  // }
 
   if (isLoadingAuthenticated) return <div>Loading...</div>
 
@@ -40,10 +40,8 @@ const App = () => {
       <button onClick={signIn}>LOGIN</button>
       {authenticated && <button onClick={signOut}>LOGOUT</button>}
       <button onClick={() => callGET({ path: "/", idToken: authenticated?.idToken })}>Call /</button>
-      <button onClick={() => callGET({ path: "/app/js", idToken: authenticated?.idToken })}>Call /app/js</button>
-      <button onClick={() => callGET({ path: "/app/ts", idToken: authenticated?.idToken })}>Call /app/ts</button>
-      <button onClick={() => callGET({ path: "/auth", idToken: authenticated?.idToken })}>Call /auth</button>
-      <button onClick={() => callGET({ path: "/no-auth", idToken: authenticated?.idToken })}>Call /no-auth</button>
+      <button onClick={() => callGET({ path: "/users", idToken: authenticated?.idToken })}>Call /users with auth</button>
+      <button onClick={() => callGET({ path: "/status", idToken: authenticated?.idToken })}>Call /status with auth</button>
     </div>
   )
 }

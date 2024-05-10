@@ -12,25 +12,26 @@ const users = async () => {
   const auth = admin.app().auth();
 
   const users = await auth.listUsers();
+  console.log(users);
   return users.users.map((user) => user.displayName);
 };
 
-@Controller('no-auth')
-export class NoAuthController {
+@Controller('users')
+export class UsersController {
   constructor() {}
 
   @Get()
-  async listUsers(): Promise<string[]> {
-    return users();
+  async get(): Promise<string[]> {
+    return await users();
   }
 }
 
-@Controller('auth')
-export class AuthController {
+@Controller('status')
+export class StatusController {
   constructor() {}
 
   @Get()
-  async currentUser(@Req() req: RequestWithAuthenticated): Promise<UserRecord> {
+  async get(@Req() req: RequestWithAuthenticated): Promise<UserRecord> {
     const { uid } = req.user;
     return await user(uid);
   }
