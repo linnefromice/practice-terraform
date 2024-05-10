@@ -7,8 +7,7 @@ export class HelloController {
 
   @Get()
   async get(): Promise<string> {
-    const count = await this.prisma.user.count();
-    console.log(count);
+    console.log(await this.prisma.user.count()); // temp: check to use prisma
     return 'Hello!';
   }
 }
