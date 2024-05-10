@@ -1,4 +1,5 @@
-import {createSchema} from 'graphql-yoga';
+import { createSchema } from "graphql-yoga";
+import { GraphQLContext } from "./context";
 
 const typeDefinitions = `
   type Query {
@@ -8,7 +9,8 @@ const typeDefinitions = `
 
 const resolvers = {
   Query: {
-    hello: () => 'Hello world!',
+    hello: (_parent: unknown, _args: {}, _context: GraphQLContext) =>
+      "Hello world!",
   },
 };
 

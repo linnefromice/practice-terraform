@@ -133,3 +133,5 @@ dist
 
 # Custom
 build
+/docker/__data__/*
+!/docker/__data__/.gitkeep

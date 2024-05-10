@@ -7,5 +7,6 @@
   "javascript.format.enable": false,
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "files.insertFinalNewline": true
+  "files.insertFinalNewline": true,
+  "[prisma]": { "editor.defaultFormatter": "Prisma.prisma" }
 }
