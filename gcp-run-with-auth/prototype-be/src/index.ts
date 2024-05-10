@@ -1,33 +1,14 @@
-console.log('Try npm run lint/fix!');
+import {createYoga} from 'graphql-yoga';
+import {createServer} from 'http';
+import {schema} from './schema';
 
-const longString =
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ut aliquet diam.';
+const main = async () => {
+  const yoga = createYoga({schema});
+  const server = createServer(yoga);
 
-const trailing = 'Semicolon';
+  server.listen(4000, () => {
+    console.log('Server is running on http://localhost:4000/graphql');
+  });
+};
 
-const why = {am: 'I tabbed?'};
-
-const iWish = "I didn't have a trailing space...";
-
-const sicilian = true;
-
-const vizzini = sicilian ? !sicilian : sicilian;
-
-const re = /foo {3}bar/;
-
-export function doSomeStuff(
-  withThis: string,
-  andThat: string,
-  andThose: string[]
-) {
-  //function on one line
-  if (!andThose.length) {
-    return false;
-  }
-  console.log(withThis);
-  console.log(andThat);
-  console.dir(andThose);
-  console.log(longString, trailing, why, iWish, vizzini, re);
-  return;
-}
-// TODO: more examples
+main();
