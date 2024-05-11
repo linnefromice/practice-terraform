@@ -3,8 +3,6 @@ import { createServer } from "http";
 import { GraphQLContext, createContext } from "./context";
 import { schema } from "./schema";
 
-// schema: GraphQLSchemaWithContext<YogaInitialContext>
-// context: Promise<GraphQLContext>
 const main = async () => {
   const yoga = createYoga<GraphQLContext>({
     schema: schema,
