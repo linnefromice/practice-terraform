@@ -11,7 +11,11 @@ const typeDefinitions = `
   }
   type Query {
     hello: String!
+    headerAuthorization: String
     users: [User!]!
+  }
+  type Mutation {
+    signup: User!
   }
 `;
 
@@ -28,6 +32,30 @@ const resolvers = {
         createdAt: datum.createdAt.toISOString(),
         updatedAt: datum.updatedAt.toISOString(),
       }));
+    },
+  },
+  Mutation: {
+    signup: async (_parent: unknown, _args: {}, context: GraphQLContext) => {
+      const firebaseUser = context.firebaseUser;
+      if (!firebaseUser) {
+        throw new Error("Unauthorized");
+      }
+      const now = new Date();
+      const data = await context.prisma.user.create({
+        data: {
+          sub: firebaseUser.sub,
+          name: firebaseUser.name || firebaseUser.email || "Anonymous", // todo: use name arg?
+          createdAt: now,
+          updatedAt: now,
+        },
+      });
+      return {
+        id: data.id,
+        sub: data.sub,
+        name: data.name,
+        createdAt: data.createdAt.toISOString(),
+        updatedAt: data.updatedAt.toISOString(),
+      };
     },
   },
 };

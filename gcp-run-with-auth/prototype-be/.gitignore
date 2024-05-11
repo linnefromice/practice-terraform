@@ -133,5 +133,6 @@ dist
 
 # Custom
 build
+credentials.json
 /docker/__data__/*
 !/docker/__data__/.gitkeep
