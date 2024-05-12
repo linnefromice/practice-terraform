@@ -1,4 +1,6 @@
 import { createSchema } from "graphql-yoga";
+import { signup } from "../graphql/mutation";
+import { currentUser } from "../graphql/query";
 import { GraphQLContext } from "./context";
 
 const typeDefinitions = `
@@ -11,11 +13,11 @@ const typeDefinitions = `
   }
   type Query {
     hello: String!
-    headerAuthorization: String
+    currentUser: User!
     users: [User!]!
   }
   type Mutation {
-    signup: User!
+    signup(name: String): User!
   }
 `;
 
@@ -23,6 +25,7 @@ const resolvers = {
   Query: {
     hello: (_parent: unknown, _args: {}, _context: GraphQLContext) =>
       "Hello world!",
+    currentUser: currentUser,
     users: async (_parent: unknown, _args: {}, context: GraphQLContext) => {
       const data = await context.prisma.user.findMany();
       return data.map(datum => ({
@@ -35,28 +38,7 @@ const resolvers = {
     },
   },
   Mutation: {
-    signup: async (_parent: unknown, _args: {}, context: GraphQLContext) => {
-      const firebaseUser = context.firebaseUser;
-      if (!firebaseUser) {
-        throw new Error("Unauthorized");
-      }
-      const now = new Date();
-      const data = await context.prisma.user.create({
-        data: {
-          sub: firebaseUser.sub,
-          name: firebaseUser.name || firebaseUser.email || "Anonymous", // todo: use name arg?
-          createdAt: now,
-          updatedAt: now,
-        },
-      });
-      return {
-        id: data.id,
-        sub: data.sub,
-        name: data.name,
-        createdAt: data.createdAt.toISOString(),
-        updatedAt: data.updatedAt.toISOString(),
-      };
-    },
+    signup: signup,
   },
 };
 

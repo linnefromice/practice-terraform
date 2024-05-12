@@ -1,8 +1,8 @@
 import { createYoga } from "graphql-yoga";
 import { createServer } from "http";
-import { GraphQLContext, createContext } from "./context";
-import { initializeFirebaseAdminApp } from "./firebase";
-import { schema } from "./schema";
+import { GraphQLContext, createContext } from "./core/context";
+import { initializeFirebaseAdminApp } from "./core/firebase";
+import { schema } from "./core/schema";
 
 const main = async () => {
   initializeFirebaseAdminApp();
