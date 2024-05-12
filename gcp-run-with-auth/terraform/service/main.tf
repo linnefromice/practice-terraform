@@ -63,3 +63,35 @@ output "firebase_auth_domain" {
 output "firebase_app_id" {
   value = google_firebase_web_app.default.app_id
 }
+
+resource "google_sql_database_instance" "default" {
+  provider = google-beta
+  project  = var.project
+  region   = var.region
+
+  name             = "sandbox-db-1"
+  database_version = "POSTGRES_15"
+  settings {
+    tier = "db-f1-micro"
+  }
+
+  deletion_protection = true
+}
+
+resource "google_sql_database" "default" {
+  provider  = google-beta
+  project  = var.project
+
+  name      = "maindb"
+  instance  = google_sql_database_instance.default.name
+}
+
+resource "google_sql_user" "default" {
+  provider  = google-beta
+  project  = var.project
+
+  instance = google_sql_database_instance.default.name
+  # host     = "%" # note: only support MySQL
+  name     = "admin"
+  password = "password" # todo: use secret.variable
+}
