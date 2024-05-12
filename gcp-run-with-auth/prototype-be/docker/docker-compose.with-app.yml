@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  db:
+    extends:
+      file: docker-compose.yml
+      service: db
+  db-admin:
+    extends:
+      file: docker-compose.yml
+      service: db-admin
+  app:
+    build: app/Dockerfile
+    ports:
+      - 4000:4000
+    depends_on:
+      - db
