@@ -44,6 +44,14 @@ resource "google_project_service" "default" {
   disable_on_destroy = false
 }
 
+resource "google_artifact_registry_repository" "default" {
+  provider      = google-beta
+  project       = var.project
+  location      = var.region
+  repository_id = "backend-nodejs-graphql"
+  format        = "DOCKER"
+}
+
 resource "google_firebase_project" "default" {
   provider = google-beta
   project  = var.project

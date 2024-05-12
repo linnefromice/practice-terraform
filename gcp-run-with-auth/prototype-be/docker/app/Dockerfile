@@ -6,16 +6,16 @@ RUN apk add --no-cache python3 make g++
 
 WORKDIR /usr/app
 
-COPY ../../package.json ./
-COPY ../../yarn.lock ./
+COPY ./package.json ./
+COPY ./yarn.lock ./
 RUN yarn
 
-COPY ../../credentials.json ./
-COPY ../../tsconfig.json ./
-COPY ../../src ./src
-COPY ../../prisma ./prisma
-COPY .env.docker ./.env
-COPY start.sh ./
+COPY ./credentials.json ./
+COPY ./tsconfig.json ./
+COPY ./src ./src
+COPY ./prisma ./prisma
+COPY ./docker/app/.env.docker ./.env
+COPY ./docker/app/start.sh ./
 RUN ls -al
 
 RUN chmod +x ./start.sh

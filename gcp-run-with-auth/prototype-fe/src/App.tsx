@@ -34,9 +34,16 @@ const App = () => {
   if (isLoadingAuthenticated) return <div>Loading...</div>
 
   return (
-    <div>
+    <div style={{ width: "100%" }}>
       <h1>Firebase Authentication</h1>
       {authenticated && <p>Welcome, {authenticated.user.displayName ?? "Anonymous"}</p>}
+      {authenticated && <p style={{
+        color: "black",
+        backgroundColor: "#f4f4f4",
+        padding: "10px",
+        whiteSpace: "pre",
+        overflow: "auto",
+      }}>{authenticated?.idToken}</p>}
       <button onClick={signIn}>LOGIN</button>
       {authenticated && <button onClick={signOut}>LOGOUT</button>}
       <button onClick={() => callGET({ path: "/", idToken: authenticated?.idToken })}>Call /</button>

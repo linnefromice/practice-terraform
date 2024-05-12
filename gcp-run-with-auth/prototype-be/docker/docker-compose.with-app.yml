@@ -9,7 +9,9 @@ services:
       file: docker-compose.yml
       service: db-admin
   app:
-    build: app/Dockerfile
+    build:
+      context: ..
+      dockerfile: docker/app/Dockerfile
     ports:
       - 4000:4000
     depends_on:
