@@ -13,8 +13,9 @@ const main = async () => {
   });
   const server = createServer(yoga);
 
-  server.listen(4000, () => {
-    console.log("Server is running on http://localhost:4000/graphql");
+  const port = process.env.PORT ? Number(process.env.PORT) : 4000;
+  server.listen(port || 4000, () => {
+    console.log(`Server is running on http://localhost:${port}/graphql`);
   });
 };
 

@@ -14,7 +14,7 @@ COPY ./credentials.json ./
 COPY ./tsconfig.json ./
 COPY ./src ./src
 COPY ./prisma ./prisma
-COPY ./docker/app/.env.docker ./.env
+# COPY ./docker/app/.env.docker ./.env
 COPY ./docker/app/start.sh ./
 RUN ls -al
 
