@@ -1,0 +1,36 @@
+{
+  "name": "",
+  "version": "0.0.0",
+  "description": "",
+  "main": "build/src/index.js",
+  "types": "build/src/index.d.ts",
+  "files": [
+    "build/src"
+  ],
+  "license": "Apache-2.0",
+  "keywords": [],
+  "scripts": {
+    "dev": "ts-node src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "gts lint",
+    "clean": "gts clean",
+    "compile": "tsc",
+    "fix": "gts fix"
+  },
+  "devDependencies": {
+    "@prisma/client": "^5.13.0",
+    "@types/node": "20.11.5",
+    "@types/pg": "^8.11.6",
+    "gts": "^5.3.0",
+    "prisma": "^5.13.0",
+    "ts-node": "^10.9.2",
+    "typescript": "~5.4.3"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^5.13.0",
+    "firebase-admin": "^12.1.0",
+    "graphql": "^16.8.1",
+    "graphql-yoga": "^5.3.1",
+    "pg": "^8.11.5"
+  }
+}

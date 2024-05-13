@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:16.2
+    environment:
+    # - TZ=Asia/Tokyo
+    - POSTGRES_DB=maindb
+    - POSTGRES_USER=admin
+    - POSTGRES_PASSWORD=password
+    - PGDATA=/var/lib/postgresql/data/pgdata
+    ports:
+    - 5432:5432
+    volumes:
+    - ./__data__/pg:/var/lib/postgresql/data
+    - ./pg:/docker-entrypoint-initdb.d
+  db-admin:
+    image: dpage/pgadmin4:8.6
+    ports:
+      - 8080:80
+    volumes:
+      - ./__data__/pgadmin:/var/lib/pgadmin
+      - ./pgadmin/servers.json:/pgadmin4/servers.json
+    environment:
+      PGADMIN_DEFAULT_EMAIL: example@example.com
+      PGADMIN_DEFAULT_PASSWORD: password
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    depends_on:
+      - db

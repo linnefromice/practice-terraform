@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  db:
+    extends:
+      file: docker-compose.yml
+      service: db
+  db-admin:
+    extends:
+      file: docker-compose.yml
+      service: db-admin
+  app:
+    build:
+      context: ..
+      dockerfile: docker/app/Dockerfile
+    platform: linux/amd64 # for gcr & if using M1/M2 Mac
+    # env_file: app/.env.local # for local development
+    ports:
+      - 4000:4000
+    depends_on:
+      - db
