@@ -1,31 +1,16 @@
+import * as fs from "fs";
 import { createSchema } from "graphql-yoga";
+import * as path from "path";
 import { signup } from "../graphql/mutation";
 import { currentUser } from "../graphql/query";
 import { GraphQLContext } from "./context";
 
-const typeDefinitions = `
-  type User {
-    id: ID!
-    sub: String!
-    name: String!
-    createdAt: String!
-    updatedAt: String!
-  }
-  type Query {
-    hello: String!
-    currentUser: User!
-    users: [User!]!
-  }
-  type Mutation {
-    signup(name: String): User!
-  }
-`;
-
 const resolvers = {
   Query: {
+    currentUser: currentUser,
+    // examples
     hello: (_parent: unknown, _args: {}, _context: GraphQLContext) =>
       "Hello world!",
-    currentUser: currentUser,
     users: async (_parent: unknown, _args: {}, context: GraphQLContext) => {
       const data = await context.prisma.user.findMany();
       return data.map(datum => ({
@@ -43,6 +28,6 @@ const resolvers = {
 };
 
 export const schema = createSchema({
-  typeDefs: [typeDefinitions],
+  typeDefs: fs.readFileSync(path.join(__dirname, "schema.graphql"), "utf-8"),
   resolvers: [resolvers],
 });

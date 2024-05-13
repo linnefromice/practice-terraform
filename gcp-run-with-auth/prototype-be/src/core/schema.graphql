@@ -1,0 +1,15 @@
+type User {
+  id: ID!
+  sub: String!
+  name: String!
+  createdAt: String!
+  updatedAt: String!
+}
+type Query {
+  hello: String!
+  currentUser: User!
+  users: [User!]!
+}
+type Mutation {
+  signup(name: String): User!
+}
