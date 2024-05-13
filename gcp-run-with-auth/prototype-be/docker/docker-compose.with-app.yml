@@ -12,8 +12,9 @@ services:
     build:
       context: ..
       dockerfile: docker/app/Dockerfile
+    platform: linux/amd64 # for gcr & if using M1/M2 Mac
+    # env_file: app/.env.local # for local development
     ports:
       - 4000:4000
-    env_file: app/.env.local
     depends_on:
       - db

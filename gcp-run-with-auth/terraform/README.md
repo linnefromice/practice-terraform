@@ -2,6 +2,7 @@
 
 ```bash
 gcloud auth application-default login
+cd service # or project
 terraform plan
 terraform apply -auto-approve
 

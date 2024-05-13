@@ -14,7 +14,9 @@ COPY ./credentials.json ./
 COPY ./tsconfig.json ./
 COPY ./src ./src
 COPY ./prisma ./prisma
-# COPY ./docker/app/.env.docker ./.env
+# Environment file to run with cloud run
+# note: Must be overridden for local execution
+COPY ./docker/app/.env.gcr ./.env
 COPY ./docker/app/start.sh ./
 RUN ls -al
 

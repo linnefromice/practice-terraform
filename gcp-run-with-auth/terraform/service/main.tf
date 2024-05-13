@@ -79,19 +79,62 @@ resource "google_sql_database_instance" "default" {
 }
 
 resource "google_sql_database" "default" {
-  provider  = google-beta
+  provider = google-beta
   project  = var.project
 
-  name      = "maindb"
-  instance  = google_sql_database_instance.default.name
+  name     = "maindb"
+  instance = google_sql_database_instance.default.name
 }
 
 resource "google_sql_user" "default" {
-  provider  = google-beta
+  provider = google-beta
   project  = var.project
 
   instance = google_sql_database_instance.default.name
   # host     = "%" # note: only support MySQL
   name     = "admin"
   password = "password" # todo: use secret.variable
+}
+
+resource "google_cloud_run_v2_service" "default" {
+  provider = google-beta
+  project  = var.project
+  location = var.region
+
+  name    = "sandbox-service-1"
+  ingress = "INGRESS_TRAFFIC_ALL"
+
+  template {
+    containers {
+      image = "us-east1-docker.pkg.dev/${var.project}/backend-nodejs-graphql/app:0.1" // todo: use variable
+    }
+
+    volumes {
+      name = "cloudsql"
+      cloud_sql_instance {
+        instances = [google_sql_database_instance.default.connection_name]
+      }
+    }
+  }
+}
+
+# note: resource is publicly accessible and restricted within the application
+data "google_iam_policy" "default" {
+  provider = google-beta
+
+  binding {
+    role = "roles/run.invoker"
+    members = [
+      "allUsers",
+    ]
+  }
+}
+
+resource "google_cloud_run_service_iam_policy" "default" {
+  provider = google-beta
+  location = google_cloud_run_v2_service.default.location
+  project  = google_cloud_run_v2_service.default.project
+  service  = google_cloud_run_v2_service.default.name
+
+  policy_data = data.google_iam_policy.default.policy_data
 }
