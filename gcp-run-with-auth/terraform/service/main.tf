@@ -64,6 +64,11 @@ output "firebase_app_id" {
   value = google_firebase_web_app.default.app_id
 }
 
+output "firebase_storage_bucket" {
+  value = data.google_firebase_web_app_config.default.storage_bucket
+}
+
+// db
 resource "google_sql_database_instance" "default" {
   provider = google-beta
   project  = var.project
@@ -96,6 +101,7 @@ resource "google_sql_user" "default" {
   password = "password" # todo: use secret.variable
 }
 
+// app
 resource "google_cloud_run_v2_service" "default" {
   provider = google-beta
   project  = var.project
@@ -137,4 +143,19 @@ resource "google_cloud_run_service_iam_policy" "default" {
   service  = google_cloud_run_v2_service.default.name
 
   policy_data = data.google_iam_policy.default.policy_data
+}
+
+// storage
+resource "google_storage_bucket" "default" {
+  provider                    = google-beta
+  project                     = var.project
+  name                        = "linnefromice-sandbox-storage-1"
+  location                    = "US"
+  uniform_bucket_level_access = true
+}
+
+resource "google_firebase_storage_bucket" "default" {
+  provider  = google-beta
+  project   = var.project
+  bucket_id = google_storage_bucket.default.id
 }
