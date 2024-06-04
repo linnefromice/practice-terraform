@@ -68,7 +68,7 @@ output "firebase_storage_bucket" {
   value = data.google_firebase_web_app_config.default.storage_bucket
 }
 
-// db
+# db
 resource "google_sql_database_instance" "default" {
   provider = google-beta
   project  = var.project
@@ -101,7 +101,7 @@ resource "google_sql_user" "default" {
   password = "password" # todo: use secret.variable
 }
 
-// app
+# app
 resource "google_cloud_run_v2_service" "default" {
   provider = google-beta
   project  = var.project
@@ -112,7 +112,7 @@ resource "google_cloud_run_v2_service" "default" {
 
   template {
     containers {
-      image = "us-east1-docker.pkg.dev/${var.project}/backend-nodejs-graphql/app:0.1" // todo: use variable
+      image = "us-east1-docker.pkg.dev/${var.project}/backend-nodejs-graphql/app:0.1" # todo: use variable
     }
 
     volumes {
@@ -145,17 +145,51 @@ resource "google_cloud_run_service_iam_policy" "default" {
   policy_data = data.google_iam_policy.default.policy_data
 }
 
-// storage
+# storage
 resource "google_storage_bucket" "default" {
   provider                    = google-beta
   project                     = var.project
   name                        = "linnefromice-sandbox-storage-1"
   location                    = "US"
   uniform_bucket_level_access = true
+
+  cors {
+    origin = ["*"]
+    method = ["GET", "HEAD", "PUT", "POST", "DELETE"]
+    max_age_seconds = 3600
+  }
 }
 
 resource "google_firebase_storage_bucket" "default" {
   provider  = google-beta
   project   = var.project
   bucket_id = google_storage_bucket.default.id
+}
+
+resource "google_firebaserules_ruleset" "default" {
+  provider = google-beta
+  project   = var.project
+  source {
+    files {
+      name    = "storage.rules"
+      content = "service firebase.storage {match /b/{bucket}/o {match /{allPaths=**} {allow read, write: if request.auth != null;}}}"
+    }
+  }
+
+  depends_on = [
+    google_firebase_storage_bucket.default
+  ]
+}
+
+resource "google_firebaserules_release" "default" {
+  provider     = google-beta
+  project      = var.project
+  name         = "firebase.storage/${google_storage_bucket.default.name}"
+  ruleset_name = "projects/${var.project}/rulesets/${google_firebaserules_ruleset.default.name}"
+
+  lifecycle {
+    replace_triggered_by = [
+      google_firebaserules_ruleset.default
+    ]
+  }
 }
